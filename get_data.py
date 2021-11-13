@@ -27,6 +27,7 @@ csvfile.close()
 ----------------------------------------------------------------------------------------------------------------------------
 
 
+
 import config, csv
 from binance.client import Client
 from datetime import datetime
@@ -49,6 +50,7 @@ def getminutedata(symbol, interval, lookback):
 
 
 df = getminutedata('ADAUSDT','1m','100')
+#Guarda en fichero, con esta funcion no hace falta abrir ni cerrar el fichero
 csvfile2 = df.to_csv("prueba5.csv")
 
 
@@ -71,3 +73,4 @@ def applytechnicals(df):
 technicals=applytechnicals(df)
 
 print(technicals)
+
