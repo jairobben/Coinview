@@ -45,23 +45,29 @@ def getminutedata(symbol, interval, lookback):
     frame = frame.set_index('Time')
     frame.index = pd.to_datetime(frame.index, unit='ms')
     frame = frame.astype(float)
-    #candlesticks = client.get_historical_klines(symbol,interval,lookback)
-
     return frame
 
 
-candlesticks2 = getminutedata('ADAUSDT','1m','100')
-
-for candlestick in candlesticks2:
-    candlestick[0]= candlestick[0]/1000
-    candlestick_writer.writerow(candlestick)
+df = getminutedata('ADAUSDT','1m','100')
+csvfile2 = df.to_csv("prueba5.csv")
 
 
-print(candlesticks2)
+#def add_vars(dataframe, )
 
 
-csvfile = open('1 minuto.csv', 'w', newline='') 
-candlestick_writer = csv.writer(csvfile, delimiter=',')
-for candlestick in  candlesticks:
-    candlestick_writer.writerow(candlestick)
-csvfile.close()
+
+
+
+
+#df.insert(1, 'datetime',[datetime.fromtimestamp(d/1000)for d in df.timestamp])
+
+def applytechnicals(df):
+    df['%K'] = ta.momentum.stock(df.High,df.Low,df.Close, window=14, smooth_window=3)
+    df['%D'] = df['%K'].rolling(3).mean()
+    df['rsi'] = ta.momentum.rsi(df.Close, window=14)
+    df['macd'] = ta.trend.macd_diff(df.Close)
+    df.dropna(inplace = True)
+
+technicals=applytechnicals(df)
+
+print(technicals)
